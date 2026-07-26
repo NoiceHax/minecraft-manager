@@ -22,7 +22,7 @@ from mcmanager.discordbot.permissions import (
 if TYPE_CHECKING:
     from mcmanager.clock import ManualClock
 
-ADMIN = 1530965589303103590
+ADMIN = 100000000000000003  # invented; see test_module.py
 OTHER = 999
 
 

@@ -35,10 +35,14 @@ if TYPE_CHECKING:
     from mcmanager.discordbot.client import Gateway
 
 SERVER: ServerId = "minecraft"
-GUILD = 1529871081538850906
-CHANNEL = 1529871109904924813
-ADMIN_ROLE = 1530965589303103590
-ADMIN_USER = 773255992062378026
+
+# Deliberately invented snowflakes. Real ids from one deployment do not belong in a test suite:
+# they are not secret, but they encode whose server this is, and a test that reads like it only
+# applies to one guild is a test nobody trusts to run anywhere else.
+GUILD = 100000000000000001
+CHANNEL = 100000000000000002
+ADMIN_ROLE = 100000000000000003
+ADMIN_USER = 100000000000000004
 RANDO = 42
 
 
