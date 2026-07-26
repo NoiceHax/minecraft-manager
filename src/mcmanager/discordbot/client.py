@@ -8,11 +8,15 @@ The import is **inside** :meth:`DiscordGateway.connect`, not at module scope, so
 module costs nothing and ``discord.enabled = false`` really is free. Nothing outside this package
 imports it at all.
 
-**Intents are deliberately minimal.** ``discord.Intents.none()`` plus nothing: slash-command
-interactions carry the invoking member and their roles in the payload, so gating ``/stop`` needs
-neither the Guild Members nor the Message Content privileged intent. Asking for privileged intents
-we do not need would be a permission escalation nobody reviewed, and it would make the bot fail to
-start once it reaches a hundred guilds without verification.
+**Intents are deliberately minimal: ``guilds`` and nothing else.** Slash-command interactions
+carry the invoking member and their roles in the payload, so gating ``/stop`` needs neither the
+Guild Members nor the Message Content privileged intent. Asking for privileged intents we do not
+need would be a permission escalation nobody reviewed, and it would make the bot fail to start
+once it reaches a hundred guilds without verification.
+
+``guilds`` itself is **not** privileged and is switched on deliberately: it is what populates the
+channel cache. With ``Intents.none()`` discord.py logs *"Guilds intent seems to be disabled"* and
+every message has to resolve its channel over HTTP first.
 """
 
 from __future__ import annotations
@@ -178,7 +182,12 @@ class DiscordGateway:
         import discord
         from discord import app_commands
 
+        # Guilds and nothing else. It is NOT a privileged intent, and without it the client keeps
+        # no channel cache, so every send falls through get_channel() to an HTTP fetch_channel() -
+        # an extra API call per event, and needless rate-limit pressure on a busy server. The two
+        # privileged intents stay off: see the module docstring.
         intents = discord.Intents.none()
+        intents.guilds = True
         client = discord.Client(intents=intents)
         tree = app_commands.CommandTree(client)
         self._client = client
