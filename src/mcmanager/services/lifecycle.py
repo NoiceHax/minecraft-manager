@@ -1547,6 +1547,26 @@ class LifecycleService:
         """Shorthand for ``service.reducer.state``."""
         return self._reducer.state
 
+    @property
+    def ready_at(self) -> datetime | None:
+        """Shorthand for ``service.reducer.ready_at``.
+
+        Exposed because the idle manager's ``min_uptime`` gate needs the current run's age, and
+        reaching it through ``.reducer`` would hand a subsystem the whole state machine to read
+        one timestamp.
+        """
+        return self._reducer.ready_at
+
+    @property
+    def started_at(self) -> datetime | None:
+        """Shorthand for ``service.reducer.started_at``.
+
+        The container's ``State.StartedAt``. Unlike :attr:`ready_at` this survives a daemon
+        restart, because a boot reconcile reads it straight off the snapshot - which is exactly
+        why the idle gate falls back to it.
+        """
+        return self._reducer.started_at
+
     # -- feeds ----------------------------------------------------------------------------------
 
     def feed(self, signal: Signal) -> list[Event]:

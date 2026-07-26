@@ -38,6 +38,8 @@ for a subsystem whose worst failure mode is stopping a populated server.
 
 from __future__ import annotations
 
+import asyncio
+import contextlib
 from datetime import timedelta
 from typing import TYPE_CHECKING, Protocol, final
 
@@ -116,6 +118,24 @@ class EventSink(Protocol):
     def publish(self, event: Event) -> None: ...
 
 
+class ProbeFreshness(Protocol):
+    """The narrow slice of :class:`~mcmanager.services.status_poller.StatusPoller` needed here.
+
+    Only three readings, because the gate only asks one question: *do we currently have a recent,
+    successful look at the server?* ``StatusPoller`` satisfies this structurally, so the idle tests
+    can hand over a two-attribute stub instead of a poller with a network in it.
+    """
+
+    @property
+    def reachable(self) -> bool: ...
+
+    @property
+    def last_success_at(self) -> datetime | None: ...
+
+    @property
+    def consecutive_failures(self) -> int: ...
+
+
 @final
 class IdleManager:
     """Watches the roster, arms a countdown when it empties, and disarms it when it does not.
@@ -142,6 +162,8 @@ class IdleManager:
         poll_interval_seconds: float = 60.0,
         min_uptime_seconds: float = 1200.0,
         treat_probe_failure_as_empty: bool = False,
+        probe: ProbeFreshness | None = None,
+        probe_max_age_seconds: float = 180.0,
     ) -> None:
         """Wire the manager.
 
@@ -181,6 +203,9 @@ class IdleManager:
         self._poll_interval = poll_interval_seconds
         self._min_uptime = min_uptime_seconds
         self._probe_failure_is_empty = treat_probe_failure_as_empty
+        self._probe = probe
+        self._probe_max_age = probe_max_age_seconds
+        self._stop_task: asyncio.Task[None] | None = None
 
         self._deadline: datetime | None = None
         self._empty_since: datetime | None = None
@@ -325,6 +350,19 @@ class IdleManager:
             subscription.unsubscribe()
         self._subscriptions = ()
 
+        # A stop already in flight is *not* cancelled. The rule this module exists to honour is
+        # "teardown must not trigger a stop"; a stop that was legitimately triggered before
+        # teardown began is a different thing, and abandoning it half-issued would leave the
+        # container in whatever state `docker stop` had reached. Bounded, because shutdown has a
+        # budget and this is the last thing holding it.
+        task = self._stop_task
+        if task is not None and not task.done():
+            _log.info("idle.awaiting_inflight_stop")
+            with contextlib.suppress(TimeoutError, asyncio.CancelledError, Exception):
+                async with asyncio.timeout(5.0):
+                    await task
+        self._stop_task = None
+
     # ------------------------------------------------------------------------------- handlers
 
     async def on_player_event(self, event: PlayerEvent) -> None:
@@ -467,19 +505,56 @@ class IdleManager:
             )
         )
 
-    def _fire(self) -> None:
-        """The deadline expired. **This is the M4 body, and it is deliberately inert.**
+    def _gate(self) -> str | None:
+        """Why this deadline must **not** result in a stop, or ``None`` when it may.
 
-        What M4 adds, in this order, on top of the running-server gate already applied below: the
-        ``min_uptime_seconds`` gate; a check that the last probe was fresh and reachable (an
-        unreachable server is UNKNOWN, never empty, unless ``treat_probe_failure_as_empty`` is
-        set, which it must not be); and only then, when ``dry_run`` is false,
-        ``await self._controller.stop(actor="idle-manager", ...)``.
+        Three questions, each of which has its own way of losing somebody's build session:
 
-        Today it publishes the event and stops nothing at all. That is the right behaviour for a
-        subsystem whose worst failure is stopping a populated server, and it means the shutdown
-        ordering in ``app.py`` is provable before the dangerous code exists.
+        *Has the server been up long enough?* ``min_uptime`` exists so that "start, nobody joined
+        within the timeout, immediate shutdown" cannot happen. A run with no ``ready_at`` has not
+        finished starting, which is the same answer.
+
+        *Have we actually looked at it recently?* A stale or failed probe is UNKNOWN, and unknown
+        is never empty. ``treat_probe_failure_as_empty`` can override this and is documented as
+        "leave this false"; it is honoured here so the setting is not a lie, and it is logged
+        loudly when it is what let a stop through.
+
+        The roster check is deliberately repeated even though ``_reconsider`` already made it: the
+        deadline was armed a quarter of an hour ago, and a join that arrived without a matching
+        event is exactly what the safety-net poll exists to catch.
         """
+        if self._roster.count > 0:
+            return f"{self._roster.count} player(s) online"
+
+        uptime = self._uptime_seconds()
+        if uptime is None:
+            return "the server's uptime is unknown"
+        if uptime < self._min_uptime:
+            return f"only up {uptime:.0f}s, min_uptime is {self._min_uptime:.0f}s"
+
+        probe = self._probe
+        if probe is None:
+            return None
+        if not probe.reachable:
+            if self._probe_failure_is_empty:
+                _log.warning(
+                    "idle.probe_failure_treated_as_empty",
+                    consecutive_failures=probe.consecutive_failures,
+                    hint="treat_probe_failure_as_empty is true; this is the setting that loses "
+                    "somebody's session",
+                )
+                return None
+            return f"the last {probe.consecutive_failures} probe(s) failed; unknown is not empty"
+        last = probe.last_success_at
+        if last is None:
+            return "no successful probe yet"
+        age = (self._clock.now() - last).total_seconds()
+        if age > self._probe_max_age:
+            return f"last good probe was {age:.0f}s ago, older than {self._probe_max_age:.0f}s"
+        return None
+
+    def _fire(self) -> None:
+        """The deadline expired. Apply the gates, then stop the server unless this is a dry run."""
         self._timer = None
         if self._closing:
             _log.warning("idle.fire_during_shutdown_ignored")
@@ -493,24 +568,33 @@ class IdleManager:
                 state=self._controller.state.value,
                 online=self._roster.count,
             )
-            self._cancel_timers()
-            self._deadline = None
-            self._empty_since = None
-            if self._store is not None:
-                self._store.set_idle_deadline(None)
+            self._clear_deadline()
             return
 
         idle_seconds = self._idle_seconds()
+        blocked = self._gate()
+        if blocked is not None:
+            # The deadline was real but the world moved on. Disarm and let the next empty period
+            # start a fresh countdown rather than retrying against a stale one.
+            _log.info(
+                "idle.fire_gated",
+                reason=blocked,
+                idle_seconds=idle_seconds,
+                online=self._roster.count,
+                state=self._controller.state.value,
+            )
+            self._clear_deadline()
+            return
+
         self._stats["triggered"] += 1
+        uptime = self._uptime_seconds()
         _log.warning(
-            "idle.stop_not_implemented",
+            "idle.deadline_reached",
             idle_seconds=idle_seconds,
+            uptime_seconds=uptime,
             dry_run=self._dry_run,
             online=self._roster.count,
             controller_state=self._controller.state.value,
-            min_uptime_seconds=self._min_uptime,
-            treat_probe_failure_as_empty=self._probe_failure_is_empty,
-            hint="M4 fills this in; no stop is issued, and none can be",
         )
         self._sink.publish(
             IdleStopTriggered(
@@ -519,9 +603,60 @@ class IdleManager:
                 source=Source.TIMER,
                 raw="idle deadline reached",
                 idle_seconds=idle_seconds if idle_seconds is not None else 0.0,
-                dry_run=True,
+                dry_run=self._dry_run,
+                uptime_seconds=uptime,
             )
         )
+        self._clear_deadline()
+
+        if self._dry_run:
+            _log.info("idle.would_stop", hint="idle.dry_run is true; nothing was stopped")
+            return
+        # `call_later` hands us a synchronous callback, and stopping is a Docker round trip. The
+        # task is tracked so `aclose` can wait for an in-flight stop rather than abandoning a
+        # half-issued one.
+        self._stop_task = asyncio.create_task(self._issue_stop(), name="idle-stop")
+
+    async def _issue_stop(self) -> None:
+        """Ask the controller to stop the server. The only place this module mutates anything."""
+        try:
+            outcome = await self._controller.stop(
+                actor="idle-manager",
+                via=Source.TIMER,
+                reason="no players online",
+            )
+        except Exception:
+            self._stats["errors"] = self._stats.get("errors", 0) + 1
+            _log.exception("idle.stop_failed")
+            return
+        if outcome.ok:
+            self._stats["stops_issued"] += 1
+            _log.warning("idle.stop_issued", outcome=str(outcome))
+        else:
+            _log.warning(
+                "idle.stop_refused",
+                rejection=outcome.rejection,
+                error=outcome.error,
+                state_before=outcome.state_before.value,
+            )
+
+    def _uptime_seconds(self) -> float | None:
+        """How long this run has been up, or ``None`` when we cannot tell.
+
+        ``ready_at`` first because it is the later of the two, so measuring from it yields the
+        smaller uptime and is the more conservative input to the ``min_uptime`` gate. It falls back
+        to the container's ``started_at``, which is what a **boot reconcile** leaves us with: a
+        daemon restarted against an already-running server never witnessed it become ready, so
+        ``ready_at`` is ``None`` and requiring it would disable idle shutdown permanently after
+        every manager restart.
+        """
+        anchor = self._controller.ready_at or self._controller.started_at
+        if anchor is None:
+            return None
+        return max((self._clock.now() - anchor).total_seconds(), 0.0)
+
+    def _clear_deadline(self) -> None:
+        self._cancel_timers()
         self._deadline = None
         self._empty_since = None
         if self._store is not None:

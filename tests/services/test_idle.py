@@ -140,6 +140,33 @@ async def stop_server(runtime: FakeRuntime, lifecycle: LifecycleService) -> None
     lifecycle.on_snapshot(await runtime.inspect("minecraft"))
 
 
+class StubProbe:
+    """A two-field stand-in for ``StatusPoller``, satisfying ``ProbeFreshness`` structurally."""
+
+    def __init__(
+        self,
+        *,
+        reachable: bool = True,
+        last_success_at: datetime | None = None,
+        consecutive_failures: int = 0,
+    ) -> None:
+        self._reachable = reachable
+        self._last = last_success_at
+        self._failures = consecutive_failures
+
+    @property
+    def reachable(self) -> bool:
+        return self._reachable
+
+    @property
+    def last_success_at(self) -> datetime | None:
+        return self._last
+
+    @property
+    def consecutive_failures(self) -> int:
+        return self._failures
+
+
 def build(
     *,
     clock: ManualClock,
@@ -148,6 +175,10 @@ def build(
     controller: ServerController,
     enabled: bool = True,
     dry_run: bool = True,
+    min_uptime_seconds: float = 1200.0,
+    probe: StubProbe | None = None,
+    probe_max_age_seconds: float = 180.0,
+    treat_probe_failure_as_empty: bool = False,
 ) -> IdleManager:
     return IdleManager(
         sink=sink,
@@ -160,7 +191,10 @@ def build(
         timeout_seconds=TIMEOUT,
         warn_seconds=WARN,
         poll_interval_seconds=60.0,
-        min_uptime_seconds=1200.0,
+        min_uptime_seconds=min_uptime_seconds,
+        probe=probe,
+        probe_max_age_seconds=probe_max_age_seconds,
+        treat_probe_failure_as_empty=treat_probe_failure_as_empty,
     )
 
 
@@ -379,15 +413,17 @@ async def test_the_warning_fires_before_the_deadline(
     assert sink.of(IdleStopTriggered) == []
 
 
-async def test_the_deadline_publishes_a_trigger_and_still_stops_nothing(
+async def test_the_deadline_in_dry_run_publishes_a_trigger_and_stops_nothing(
     clock: ManualClock,
     sink: RecordingSink,
     roster: PlayerRoster,
     controller: ServerController,
     runtime: FakeRuntime,
 ) -> None:
-    """M4 fills the body in. Until then the event is published and the server is untouched."""
-    idle = build(clock=clock, sink=sink, roster=roster, controller=controller)
+    """The cutover setting: the countdown is computed and published, the server is untouched."""
+    idle = build(
+        clock=clock, sink=sink, roster=roster, controller=controller, min_uptime_seconds=0.0
+    )
     await idle.on_player_event(left(clock))
 
     await clock.advance(TIMEOUT)
@@ -398,6 +434,146 @@ async def test_the_deadline_publishes_a_trigger_and_still_stops_nothing(
     assert triggered[0].idle_seconds == pytest.approx(TIMEOUT)
     assert runtime.stop_calls == []
     assert idle.stats["stops_issued"] == 0
+
+
+async def test_the_deadline_when_live_actually_stops_the_server(
+    clock: ManualClock,
+    sink: RecordingSink,
+    roster: PlayerRoster,
+    controller: ServerController,
+    runtime: FakeRuntime,
+) -> None:
+    """With dry_run off and every gate satisfied, the controller is finally asked to stop."""
+    idle = build(
+        clock=clock,
+        sink=sink,
+        roster=roster,
+        controller=controller,
+        dry_run=False,
+        min_uptime_seconds=0.0,
+    )
+    await idle.on_player_event(left(clock))
+
+    await clock.advance(TIMEOUT)
+    await clock.advance(0)  # let the stop task created by the timer callback run
+
+    triggered = sink.of(IdleStopTriggered)
+    assert len(triggered) == 1
+    assert triggered[0].dry_run is False
+    assert runtime.stop_calls, "the controller should have reached the runtime"
+    assert idle.stats["stops_issued"] == 1
+
+    await idle.aclose()
+
+
+@pytest.mark.parametrize(
+    ("min_uptime_seconds", "probe", "fragment"),
+    [
+        (TIMEOUT * 4, None, "min_uptime"),
+        (0.0, StubProbe(reachable=False, consecutive_failures=3), "unknown is not empty"),
+        (0.0, StubProbe(reachable=True, last_success_at=None), "no successful probe"),
+    ],
+    ids=["too-young", "probe-unreachable", "probe-never-succeeded"],
+)
+async def test_the_gates_block_a_stop(
+    clock: ManualClock,
+    sink: RecordingSink,
+    roster: PlayerRoster,
+    controller: ServerController,
+    runtime: FakeRuntime,
+    min_uptime_seconds: float,
+    probe: StubProbe | None,
+    fragment: str,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Each gate refuses on its own, and says which one refused.
+
+    A stop that is silently skipped is as bad as one that should not have happened: during the
+    dry-run soak the whole point is being able to explain every decision.
+    """
+    idle = build(
+        clock=clock,
+        sink=sink,
+        roster=roster,
+        controller=controller,
+        dry_run=False,
+        min_uptime_seconds=min_uptime_seconds,
+        probe=probe,
+    )
+    await idle.on_player_event(left(clock))
+
+    await clock.advance(TIMEOUT)
+    await clock.advance(0)
+
+    assert sink.of(IdleStopTriggered) == []
+    assert runtime.stop_calls == []
+    assert idle.stats["stops_issued"] == 0
+    assert idle.armed is False, "a gated deadline must disarm, not retry against a stale one"
+    assert fragment in capsys.readouterr().out
+
+
+async def test_a_player_who_rejoined_without_an_event_still_blocks_the_stop(
+    clock: ManualClock,
+    sink: RecordingSink,
+    roster: PlayerRoster,
+    controller: ServerController,
+    runtime: FakeRuntime,
+) -> None:
+    """The roster is re-read at fire time, not trusted from when the countdown was armed.
+
+    Fifteen minutes is long enough to miss a join, and the safety-net poll exists precisely
+    because events can be lost. Firing on a stale reading is how a populated server gets stopped.
+    """
+    idle = build(
+        clock=clock,
+        sink=sink,
+        roster=roster,
+        controller=controller,
+        dry_run=False,
+        min_uptime_seconds=0.0,
+    )
+    await idle.on_player_event(left(clock))
+    roster.join("Hypixelite")  # arrives without a PlayerJoined ever reaching the manager
+
+    await clock.advance(TIMEOUT)
+    await clock.advance(0)
+
+    assert runtime.stop_calls == []
+    assert idle.stats["stops_issued"] == 0
+
+
+async def test_a_server_discovered_at_boot_can_still_be_idle_stopped(
+    clock: ManualClock,
+    sink: RecordingSink,
+    roster: PlayerRoster,
+    controller: ServerController,
+    runtime: FakeRuntime,
+) -> None:
+    """The min_uptime gate falls back to the container's started_at.
+
+    A daemon restarted against an already-running server reconciles to READY without witnessing
+    it become ready, so ``ready_at`` is ``None``. Requiring ``ready_at`` would have disabled idle
+    shutdown permanently after every manager restart - which is exactly the state this fixture is
+    in, since ``ready_server`` reconciles from a snapshot rather than replaying a start.
+    """
+    assert controller.ready_at is None, "this fixture reconciles, it does not witness a start"
+    assert controller.started_at is not None, "but the container's start time is known"
+
+    idle = build(
+        clock=clock,
+        sink=sink,
+        roster=roster,
+        controller=controller,
+        dry_run=False,
+        min_uptime_seconds=0.0,
+    )
+    await idle.on_player_event(left(clock))
+
+    await clock.advance(TIMEOUT)
+    await clock.advance(0)
+
+    assert idle.stats["stops_issued"] == 1
+    await idle.aclose()
 
 
 # -------------------------------------------------------------- nothing arms against a dead server

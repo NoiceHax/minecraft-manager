@@ -93,6 +93,7 @@ if TYPE_CHECKING:
     from types import FrameType
 
     from mcmanager.containers.dto import ContainerSnapshot
+    from mcmanager.control.views import StatusView
 
 __all__ = ["AppServices", "Application", "ControlSurface", "SignalRelay", "run", "run_app"]
 
@@ -552,6 +553,12 @@ class Application:
             server_id=server.id,
             controller=self._controller,
             roster=self._roster,
+            # Providers, not values: `self._services` does not exist yet at this point in the
+            # constructor, and `/status` must render the *same* view the HTTP surface renders
+            # rather than a second Discord-shaped one that can drift from it.
+            status=self._status_view,
+            console_tail=self._pipeline.tail,
+            idle_describe=self._idle.describe,
             mode=settings.discord.mode,
             enabled=settings.discord.enabled,
             token=settings.discord.token,
@@ -644,6 +651,18 @@ class Application:
     def _tail(self) -> tuple[str, ...]:
         """The log pipeline's ring buffer, for ``ServerCrashed.tail``. Called synchronously."""
         return self._pipeline.tail()
+
+    def _status_view(self) -> StatusView:
+        """The aggregated status view, for Discord's ``/status``.
+
+        Imported here rather than at module scope for the same reason
+        :func:`_load_control_surface` does it: this module must import cleanly whether or not the
+        control package is present. Unlike the surface, a missing one here is not degradable - the
+        command has nothing to render - so it propagates and the command handler reports it.
+        """
+        from mcmanager.control.server import build_status_view
+
+        return build_status_view(self._services)
 
     def _on_critical_failure(self, task: str, error: BaseException | None) -> None:
         """A critical task died. The supervisor has already set ``shutdown_requested``."""
@@ -784,6 +803,10 @@ class Application:
             # interval forever, for a subsystem that is off on purpose.
             _log.info("app.status_poller_disabled", hint="probe.enabled is false")
         self._supervisor.spawn("idle", self._idle.run)
+        if self._discord.live and self._settings.discord.console_channel_id > 0:
+            # Only when there is a relay to run: `run_relay` returns immediately otherwise, and a
+            # restart policy would then log a restart every backoff interval forever.
+            self._supervisor.spawn("discord-console", self._discord.run_relay)
 
     async def _run_checkpoints(self) -> None:
         """Fold state into the store and write it, every ``state.checkpoint_interval_seconds``."""

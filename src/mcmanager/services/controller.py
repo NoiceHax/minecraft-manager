@@ -53,6 +53,8 @@ from mcmanager.core.types import ControlAction, LifecycleState, Source
 from mcmanager.services.lifecycle import Intent, IntentSignal
 
 if TYPE_CHECKING:
+    from datetime import datetime
+
     from mcmanager.clock import Clock
     from mcmanager.containers.base import ContainerRuntime
     from mcmanager.core.types import ContainerName, ServerId
@@ -181,6 +183,25 @@ class ServerController:
     def state(self) -> LifecycleState:
         """The lifecycle state this controller is about to act against."""
         return self._lifecycle.state
+
+    @property
+    def ready_at(self) -> datetime | None:
+        """When the current run became ready, or ``None`` if it has not.
+
+        Delegated from the lifecycle for the same reason :attr:`state` is: the idle manager needs
+        the server's uptime for its ``min_uptime`` gate, and giving it the whole lifecycle service
+        so it can read one field would hand it the reducer as well.
+        """
+        return self._lifecycle.ready_at
+
+    @property
+    def started_at(self) -> datetime | None:
+        """The container's ``State.StartedAt`` for the current run, or ``None``.
+
+        Survives a daemon restart where :attr:`ready_at` does not: a boot reconcile discovers a
+        running server without witnessing it become ready, and deliberately announces nothing.
+        """
+        return self._lifecycle.started_at
 
     @property
     def stop_timeout_seconds(self) -> int:
