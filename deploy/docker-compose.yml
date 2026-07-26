@@ -1,0 +1,94 @@
+# Copy target for ~/homelab/compose/mcmanager/docker-compose.yml.
+#
+# mcmanager MUST be its own compose project. Never fold it into the `minecraft` project, or a
+# `docker compose down` takes out the manager along with the thing it manages.
+
+services:
+  mcmanager:
+    build: ../../apps/mcmanager
+    container_name: mcmanager
+
+    # Deliberately asymmetric to minecraft's `restart: "no"`: the manager must outlive reboots so
+    # that it can start the thing which should not restart on its own.
+    restart: unless-stopped
+
+    # The socket is root:983 and this container runs as 1000:1000. `group_add` adds a supplementary
+    # group at runtime, and the gid does not need to exist in the image's /etc/group - the kernel
+    # only compares the number. DOCKER_GID lives in this directory's .env so a host where docker is
+    # gid 999 is a config change rather than a rebuild.
+    #
+    # Say it plainly: membership in that group is root-equivalent on the host. Running as uid 1000
+    # is blast-radius reduction, not an isolation boundary.
+    user: "1000:1000"
+    group_add:
+      - "${DOCKER_GID:-983}"
+
+    # Deliberately NO `env_file: ../../secrets/.env`. That file is the shared homelab credential
+    # store (POSTGRES_PASSWORD, REDIS_PASSWORD, ...) and this daemon needs none of it: its own two
+    # secrets arrive as files under /run/secrets, and rcon.mode = "exec" means it never holds the
+    # RCON password at all. Injecting the shared file would put every unrelated homelab credential
+    # into `docker exec mcmanager env` for no benefit.
+
+    environment:
+      MCM_CONFIG_FILE: /app/config/mcmanager.toml
+      MCM_SECRETS_DIR: /run/secrets
+      TZ: Asia/Kolkata
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./mcmanager.toml:/app/config/mcmanager.toml:ro
+      # The server's own log4j2 archives. Read-only: the daemon must never create or delete these.
+      # Relative, not `~/...`: compose's expansion of a leading tilde in a bind source has varied
+      # across versions, and every other path in this file is relative to the compose file anyway.
+      - ../../data/minecraft/logs:/mnt/mc-logs:ro
+      # Our own state: session records, resume marker, gap-filling archives.
+      - mcmanager-state:/var/lib/mcmanager
+
+    secrets:
+      - discord_token
+      - web_token
+
+    networks:
+      - homelab
+
+    # 8787 is exposed, never published. The documented access path is
+    #   docker exec mcmanager mcmanager status
+    # which means no LAN auth surface and no ufw involvement at all.
+    expose:
+      - "8787"
+
+    # Default is 10s and our shutdown does a Discord round trip.
+    stop_grace_period: 30s
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8787/healthz', timeout=4).status == 200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    deploy:
+      resources:
+        limits:
+          # Turns a leak into a visible OOM-kill rather than a slow squeeze on a host already
+          # committing 4G to the JVM.
+          memory: 384M
+
+secrets:
+  discord_token:
+    file: ../../secrets/discord_token
+  web_token:
+    file: ../../secrets/web_token
+
+volumes:
+  mcmanager-state:
+
+networks:
+  homelab:
+    external: true

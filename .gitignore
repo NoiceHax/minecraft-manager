@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Local runtime state (mcmanager writes here in dev)
+var/
+*.log
+*.log.gz
+
+# Secrets and local config
+.env
+.env.*
+!.env.example
+secrets/
+config/mcmanager.local.toml
+config/mcmanager.toml
+
+# Editors / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db

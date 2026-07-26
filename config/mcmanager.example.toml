@@ -1,0 +1,202 @@
+# Minecraft Manager - annotated reference config.
+#
+# This file is committed and contains ZERO secrets. Secrets (discord.token, web.token,
+# rcon.password) are read from files in `secrets_dir` (/run/secrets by default, bind-mounted by
+# compose) or from MCM_* environment variables. A literal secret written here is accepted but
+# warned about loudly at startup.
+#
+# Precedence: defaults < this file < secrets_dir files < MCM_* env < CLI flags.
+# Every nested table is `extra = "forbid"`: a typo'd key is a startup error, never a silent no-op.
+#
+# Validate without starting anything:
+#   mcmanager check-config --config config/mcmanager.example.toml
+
+# Bumped when a backwards-incompatible schema change lands. The loader refuses a version it does
+# not understand rather than guessing.
+schema_version = 1
+
+# "real" talks to the Docker daemon. "fake" drives a scriptable in-memory runtime and is the only
+# way the daemon runs on a machine with no Docker. Deliberately NOT the default: a homelab daemon
+# silently running against a fake in production is worse than a startup failure.
+runtime = "real"
+
+# Directory of file-based secrets, one file per setting name (discord_token, web_token,
+# rcon_password). Missing directory is fine; missing files are fine unless a cross-field validator
+# needs them.
+secrets_dir = "/run/secrets"
+
+
+[server]
+# Stable identity stamped onto every event as Event.server_id.
+id = "minecraft"
+# Which games/ adapter parses this server's logs. See games/registry.py.
+game = "minecraft"
+# Docker container name. Re-resolved by name on every reconnect, never cached by id: a
+# `compose down/up` changes the id and a cached id silently follows a dead container forever.
+container = "minecraft"
+# Hostname used for SLP status probes. NOT "localhost": from inside our container that is our own
+# loopback where nothing listens, and idle shutdown treating a failed probe as "zero players"
+# would then kill a populated server. "minecraft" resolves because both containers are attached to
+# the external `homelab` network.
+host = "minecraft"
+port = 25565
+
+[server.lifecycle]
+# Seconds given to the JVM to save and exit before Docker sends SIGKILL. The old bash script had
+# this as a bare `-t 90`.
+stop_timeout_seconds = 90
+# Extra seconds past the container's own healthcheck guard window before a server stuck in
+# STARTING is declared DEGRADED. The guard window itself is read from the container
+# (StartPeriod + Interval * (Retries + 1)), never hardcoded.
+start_deadline_extra_seconds = 60
+# Which signals may promote STARTING -> READY, first one wins. "log" is the `Done (32.521s)!` line,
+# "health" is a docker `health_status: healthy` event, "probe" is a successful SLP query. All three
+# assert the same fact (mc-health is itself an SLP query) but the log line arrives ~90s earlier.
+# Set to ["health"] for the strict, spec-literal behaviour.
+ready_signals = ["log", "health", "probe"]
+# Emit ServerCrashed rather than ServerStopped when the container dies without a stop intent.
+treat_unexpected_exit_as_crash = true
+
+
+[docker]
+# Leave unset to use DOCKER_HOST / the default unix socket. Set explicitly only for dev:
+#   host = "ssh://minty@192.168.1.7"
+# host = "unix:///var/run/docker.sock"
+ping_timeout_seconds = 5.0
+# Reconnect backoff for the log stream and event watcher (exponential, +/-20% jitter).
+reconnect_initial_seconds = 1.0
+reconnect_max_seconds = 30.0
+# Safety-net inspect, catches docker events we missed entirely.
+reconcile_interval_seconds = 60.0
+# Docker's `since` is second-granularity and replays the first second, so lines are de-duplicated
+# through a ring of (timestamp, hash) pairs.
+dedupe_ring_size = 256
+
+
+[events]
+# Bus queue capacity. On overflow: drop an incoming ConsoleLog; for anything else evict the oldest
+# ConsoleLog to make room; if there is none, drop and log CRITICAL and bump dropped_critical,
+# which surfaces in /readyz. A non-zero dropped_critical means this number is wrong.
+queue_max = 5000
+# Per-handler timeout. Without it a hung SEQUENTIAL handler stalls the bus permanently.
+handler_timeout_seconds = 5.0
+# A subscriber is paused after this many consecutive failures.
+max_consecutive_failures = 5
+# Token bucket applied by the log pipeline BEFORE publishing, so a Paper crash dumping thousands
+# of stack frames per second never reaches the queue. Overflow coalesces into a single
+# "... N lines suppressed ..." line.
+rate_limit_per_second = 200
+rate_limit_burst = 1000
+# Ring of recent console lines captured for ServerCrashed.tail - free and race-free, unlike a
+# post-hoc logs_tail() after the stream has already closed.
+crash_tail_lines = 40
+# How long aclose() drains the queue before cancelling stragglers.
+drain_timeout_seconds = 5.0
+
+
+[probe]
+# Server List Ping poller. Note the server's own mc-health healthcheck already queries SLP every
+# 30s; this adds a second query. Harmless, but it is the explanation if SLP lag ever appears.
+enabled = true
+interval_seconds = 45.0
+timeout_seconds = 5.0
+# players.sample is capped at 12 by the protocol and can be randomised by plugins. Roster
+# reconciliation only trusts a sample when players_online == len(sample); otherwise the log-derived
+# online set stays authoritative and a full server cannot produce a storm of fake leave events.
+trust_partial_sample = false
+
+
+[rcon]
+# "exec"     -> docker exec minecraft rcon-cli <cmd>. The itzg image configures rcon-cli from the
+#               container's own environment, so mcmanager never needs the RCON password at all:
+#               nothing to store, rotate or leak. This is the default for that reason.
+# "network"  -> aio-mc-rcon to rcon.host:rcon.port. Lower latency, needs the password.
+# "disabled" -> no command channel.
+mode = "exec"
+host = "minecraft"
+port = 25575
+timeout_seconds = 10.0
+# password is NEVER written here. secrets_dir/rcon_password, or MCM_RCON__PASSWORD.
+
+
+[idle]
+# Off by default. Turn it on only after the dry-run soak described in the cutover plan.
+enabled = false
+# Compute and log "would stop", but never actually stop. This is the cutover setting.
+dry_run = true
+# Minutes with zero players before the server is stopped.
+timeout_minutes = 15
+# How often the idle manager re-evaluates. Validator enforces poll_interval <= timeout / 3.
+poll_interval_seconds = 60
+# Announce the pending shutdown this many minutes before it happens.
+warn_minutes = 2
+# Never idle-stop a server that just booted: "start -> nobody joined in 15 min -> instant
+# shutdown" reads as broken to everyone watching.
+min_uptime_minutes = 20
+# A failed status probe means UNKNOWN, not "zero players". Leave this false. Setting it true is
+# how you lose somebody's build session.
+treat_probe_failure_as_empty = false
+
+
+[logs]
+# Where the SERVER's own log4j2 output lives, mounted read-only. log4j2 already gzips per-run
+# archives here (ENABLE_ROLLING_LOGS=true, retains 1000); the daemon must never create or delete
+# files in this directory.
+server_log_dir = "/mnt/mc-logs"
+# Where OUR gap-filling archives go. log4j2 rolls latest.log at the next *start*, so a session that
+# is never followed by another start has no archive; on STOPPING -> STOPPED we gzip latest.log to
+# session-<start_utc>-<id>.log.gz here. This is the only archiving the daemon does.
+archive_dir = "/var/lib/mcmanager/archives"
+# Where the DAEMON's own structured logs go. Three different things, three different mounts.
+daemon_log_dir = "/var/lib/mcmanager/logs"
+level = "INFO"
+# "json" for the deployed daemon (docker logs | jq), "console" for humans.
+format = "json"
+# Gzip latest.log into archive_dir when the server stops.
+archive_on_stop = true
+# Pruning of archive_dir only. Never touches server_log_dir.
+retain_archives = 50
+
+
+[state]
+# Session records, the resume marker and the idle deadline. Mutable state does not belong in
+# /opt.
+dir = "/var/lib/mcmanager/state"
+# Flush the in-flight session record at least this often, so a hard kill loses at most this much.
+checkpoint_interval_seconds = 60.0
+
+
+[discord]
+enabled = false
+# "live"     -> posts for real
+# "dryrun"   -> logs what it would send, sends nothing. The 48h shadow-run setting.
+# "disabled" -> the gateway is never even opened
+mode = "dryrun"
+# Snowflakes are integers. An empty string here would defer every misconfiguration to an
+# int("") three hours into a run.
+guild_id = 0
+# Where status, join/leave, deaths and session summaries go.
+channel_id = 0
+# Optional: raw console relay. 0 disables it.
+console_channel_id = 0
+# Required to use the mutating slash commands (/start, /stop, /restart).
+admin_role_id = 0
+# token is NEVER written here. secrets_dir/discord_token, or MCM_DISCORD__TOKEN.
+# Guild-scoped command registration is instant; global takes about an hour.
+register_commands_globally = false
+
+
+[web]
+# The aiohttp control surface. The CLI, Discord and any future web UI are all clients of this one
+# API rather than three parallel implementations.
+enabled = true
+# Bind loopback only. On the homelab the port is `expose`d, never published, and the documented
+# access path is `docker exec mcmanager mcmanager status` - no LAN auth surface at all.
+host = "127.0.0.1"
+port = 8787
+# What the CLI dials when neither --url nor MCMANAGER_URL is set.
+url = "http://127.0.0.1:8787"
+# Per-SSE-client queue. A slow `curl` on /events drops its own messages rather than applying
+# backpressure to the bus.
+sse_queue_max = 500
+# token is NEVER written here. Required for POST /control/*. secrets_dir/web_token.

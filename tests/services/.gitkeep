@@ -1,0 +1,2 @@
+# Service tests: the lifecycle reducer as a table over signals, idle logic, the roster,
+# session aggregation. All against ManualClock and FakeRuntime; no I/O.

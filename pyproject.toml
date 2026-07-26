@@ -1,0 +1,158 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mcmanager"
+version = "0.1.0"
+description = "Event-driven Docker-native manager for game servers, starting with Minecraft"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+dependencies = [
+    "docker>=7.1,<8",
+    "mcstatus>=11.1,<12",
+    "discord.py>=2.4,<3",
+    "aiohttp>=3.10",
+    "pydantic>=2.10",
+    "pydantic-settings>=2.7",
+    "structlog>=24.4",
+    "tzdata",
+]
+
+[project.optional-dependencies]
+rcon = ["aio-mc-rcon>=3.4"]
+
+[project.scripts]
+mcmanager = "mcmanager.cli.main:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.25",
+    "pytest-cov>=6.0",
+    "ruff>=0.8",
+    "pyright>=1.1.390",
+    # Dev-only, for the Windows -> homelab `DOCKER_HOST=ssh://` path the live tests use.
+    # docker-py 7.x defines SSHHTTPAdapter only when paramiko imports, so ssh:// needs paramiko
+    # even with use_ssh_client=True (which merely picks the system ssh binary over paramiko's
+    # transport). Production runs in-container against unix:///var/run/docker.sock and needs
+    # none of this, which is why it is not a runtime dependency.
+    "paramiko>=3.5",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcmanager"]
+
+# --------------------------------------------------------------------------- ruff
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+extend-exclude = [".venv"]
+
+[tool.ruff.lint]
+select = [
+    "E", "W", "F", "I", "UP", "B", "C4", "SIM", "ASYNC", "RUF", "ANN", "TID",
+    "PTH", "DTZ", "LOG", "G", "S", "T20", "TC", "PT", "ERA", "RET", "ARG",
+]
+ignore = [
+    # Conflicts with the "one blank line before a nested def" formatting ruff uses.
+    "E203",
+]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+# This block is what mechanically enforces the Clock injection rule and the
+# "no subprocess / no requests" constraint. Only the modules listed in
+# per-file-ignores below are allowed to touch these.
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"asyncio.sleep".msg = "Use the injected Clock (mcmanager.clock.Clock.sleep). Only src/mcmanager/clock.py may call asyncio.sleep."
+"time.sleep".msg = "Blocking sleep is never allowed; use the injected Clock."
+"time.monotonic".msg = "Use the injected Clock.monotonic(). Only src/mcmanager/clock.py may call time.monotonic."
+"datetime.datetime.now".msg = "Use the injected Clock.now(). Only src/mcmanager/clock.py may call datetime.now."
+"datetime.datetime.utcnow".msg = "Naive UTC is banned; use the injected Clock.now(), which returns tz-aware UTC."
+"datetime.datetime.today".msg = "Use the injected Clock.now()."
+"requests".msg = "Use aiohttp (or the docker SDK). requests is a banned dependency."
+"subprocess".msg = "No subprocess anywhere: talk to Docker through the official Python SDK."
+"os.system".msg = "No subprocess anywhere: talk to Docker through the official Python SDK."
+
+[tool.ruff.lint.per-file-ignores]
+# The one sanctioned home of wall-clock/monotonic/sleep primitives.
+"src/mcmanager/clock.py" = ["TID251"]
+# The only module allowed to print.
+"src/mcmanager/cli/render.py" = ["T201"]
+# Tests drive the clock directly, assert, and use fixture arguments they do not read.
+"tests/**" = ["TID251", "S101", "ANN401", "ARG001", "ARG002", "SLF001"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["mcmanager"]
+
+[tool.ruff.lint.flake8-type-checking]
+runtime-evaluated-base-classes = [
+    "pydantic.BaseModel",
+    "pydantic_settings.BaseSettings",
+]
+# Event and DTO annotations are resolved at runtime by core/serde.py (pydantic TypeAdapter over
+# the dataclasses), so their imports must not be hidden behind TYPE_CHECKING.
+runtime-evaluated-decorators = [
+    "dataclasses.dataclass",
+    "pydantic.dataclasses.dataclass",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+docstring-code-format = true
+
+# --------------------------------------------------------------------------- pyright
+
+[tool.pyright]
+typeCheckingMode = "strict"
+pythonVersion = "3.12"
+include = ["src", "tests"]
+exclude = ["**/__pycache__", ".venv"]
+venvPath = "."
+venv = ".venv"
+reportMissingTypeStubs = "error"
+reportUnnecessaryTypeIgnoreComment = "error"
+reportImplicitOverride = "none"
+
+# --------------------------------------------------------------------------- pytest
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"
+markers = [
+    "live: talks to the real homelab Docker daemon; requires MCMANAGER_LIVE=1 and is never run in CI",
+    "integration: in-process, fakes at the boundary, no network",
+    "slow: takes more than a second of wall clock",
+]
+filterwarnings = [
+    "error",
+    # docker-py still imports distutils-era shims on some platforms.
+    "ignore::DeprecationWarning:docker.*",
+    "ignore::DeprecationWarning:websocket.*",
+]
+
+[tool.coverage.run]
+source = ["src/mcmanager"]
+branch = true
+omit = [
+    # Exempt by plan section 13: the one module that may be wrong about docker-py,
+    # covered by live tests instead.
+    "src/mcmanager/containers/docker_runtime.py",
+    "src/mcmanager/containers/streams.py",
+]
+
+[tool.coverage.report]
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "@overload",
+]

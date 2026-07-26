@@ -1,0 +1,106 @@
+# Fully offline development config: no Docker, no network, no Discord.
+#
+#   uv run mcmanager run --config config/mcmanager.dev.toml
+#
+# Everything writes under ./var, which is gitignored.
+
+schema_version = 1
+
+# The scriptable in-memory runtime. Nothing here touches a Docker socket.
+runtime = "fake"
+
+secrets_dir = "var/secrets"
+
+
+[server]
+id = "minecraft-dev"
+game = "minecraft"
+container = "minecraft"
+# Never resolved: the probe is disabled below and the fake runtime answers everything else.
+host = "minecraft"
+port = 25565
+
+[server.lifecycle]
+stop_timeout_seconds = 90
+start_deadline_extra_seconds = 60
+ready_signals = ["log", "health", "probe"]
+treat_unexpected_exit_as_crash = true
+
+
+[docker]
+ping_timeout_seconds = 5.0
+reconnect_initial_seconds = 0.1
+reconnect_max_seconds = 2.0
+reconcile_interval_seconds = 10.0
+dedupe_ring_size = 256
+
+
+[events]
+queue_max = 5000
+handler_timeout_seconds = 5.0
+max_consecutive_failures = 5
+rate_limit_per_second = 200
+rate_limit_burst = 1000
+crash_tail_lines = 40
+drain_timeout_seconds = 5.0
+
+
+[probe]
+# No sockets in dev. The autouse test fixture blocks them anyway.
+enabled = false
+interval_seconds = 45.0
+timeout_seconds = 5.0
+trust_partial_sample = false
+
+
+[rcon]
+mode = "disabled"
+host = "minecraft"
+port = 25575
+timeout_seconds = 10.0
+
+
+[idle]
+# Wired and observable, but it will never stop anything from a dev box.
+enabled = true
+dry_run = true
+timeout_minutes = 15
+poll_interval_seconds = 60
+warn_minutes = 2
+min_uptime_minutes = 20
+treat_probe_failure_as_empty = false
+
+
+[logs]
+server_log_dir = "var/mc-logs"
+archive_dir = "var/archives"
+daemon_log_dir = "var/logs"
+level = "DEBUG"
+format = "console"
+archive_on_stop = false
+retain_archives = 5
+
+
+[state]
+dir = "var/state"
+checkpoint_interval_seconds = 60.0
+
+
+[discord]
+# A cross-field validator refuses runtime = "fake" together with discord.mode = "live", so fake
+# events can never be posted to a real channel.
+enabled = false
+mode = "disabled"
+guild_id = 0
+channel_id = 0
+console_channel_id = 0
+admin_role_id = 0
+register_commands_globally = false
+
+
+[web]
+enabled = true
+host = "127.0.0.1"
+port = 8787
+url = "http://127.0.0.1:8787"
+sse_queue_max = 500

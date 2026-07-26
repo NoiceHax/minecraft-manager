@@ -1,0 +1,167 @@
+# CI for mcmanager.
+#
+# Python 3.12 only in the required matrix, deliberately. discord.py and docker-py trail new CPython
+# releases by months, and a red CI you learn to ignore is worse than no CI at all.
+#
+# The gitleaks job is the mechanical answer to "how do we not repeat the hardcoded-webhook
+# mistake": a Discord bot token and a webhook URL both match its default rules, and the whole
+# reason this project exists is that two of those were checked into a homelab script.
+#
+# Live tests are excluded everywhere. They talk to a real homelab over SSH and are opt-in via
+# MCMANAGER_LIVE=1; CI must never be able to touch that box.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  UV_VERSION: "0.11.29"
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  lint:
+    name: ruff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+
+      - name: Install
+        run: uv sync --all-extras --dev --frozen
+
+      - name: ruff check
+        run: uv run ruff check --output-format=github .
+
+      # Separate step so "your code is wrong" and "your code is unformatted" are distinguishable
+      # at a glance in the job list.
+      - name: ruff format --check
+        run: uv run ruff format --check .
+
+  types:
+    name: pyright (strict)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+
+      - name: Install
+        run: uv sync --all-extras --dev --frozen
+
+      - name: pyright
+        run: uv run pyright
+
+  test:
+    name: pytest (3.12)
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+
+      - name: Install
+        run: uv sync --all-extras --dev --frozen
+        env:
+          UV_PYTHON: ${{ matrix.python-version }}
+
+      # -m "not live" is the load-bearing flag: the live suite reaches the homelab over SSH and
+      # is additionally gated on MCMANAGER_LIVE=1, which is never set here.
+      - name: pytest
+        run: uv run pytest -m "not live" --cov --cov-report=term-missing --cov-report=xml
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.python-version }}
+          path: coverage.xml
+          if-no-files-found: ignore
+
+  config:
+    name: check-config
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+
+      - name: Install
+        run: uv sync --all-extras --dev --frozen
+
+      # The first line of the deploy runbook, run as a job: the committed example config must
+      # always validate, or the runbook's first step fails on the homelab instead of here.
+      - name: Validate the example config
+        run: uv run mcmanager check-config --config config/mcmanager.example.toml
+
+      - name: Validate the dev config
+        run: uv run mcmanager check-config --config config/mcmanager.dev.toml
+
+  docker:
+    name: docker build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      # Build only. Pushing to GHCR is the phase-2 improvement that turns a rollback into a tag
+      # change; until then the homelab builds from rsynced source and this job's value is proving
+      # the Dockerfile still works before anyone tries that.
+      - name: Build the image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          load: true
+          tags: mcmanager:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # The image must be able to validate a config with no Docker socket and no secrets, because
+      # that is exactly what `docker exec mcmanager mcmanager check-config` does on deploy.
+      - name: Smoke test the image
+        run: |
+          docker run --rm mcmanager:ci check-config \
+            --config /app/config/mcmanager.example.toml
+
+  secrets:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # gitleaks needs history to scan commits, not just the working tree.
+          fetch-depth: 0
+
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

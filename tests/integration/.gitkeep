@@ -1,0 +1,2 @@
+# In-process integration tests: streamer + FakeRuntime (reconnect, backpressure, mid-line chunk
+# splits), full app boot with runtime = "fake", and the health endpoints.

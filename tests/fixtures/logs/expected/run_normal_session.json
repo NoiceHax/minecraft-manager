@@ -1,0 +1,1575 @@
+[
+  {
+    "level": "INFO",
+    "message": "Running Java 25 (OpenJDK 64-Bit Server VM 25.0.3+9-LTS; Eclipse Adoptium Temurin-25.0.3+9) on Linux 7.0.0-28-generic (amd64)",
+    "origin": "server",
+    "raw": "[22:33:53] [ServerMain/INFO]: Running Java 25 (OpenJDK 64-Bit Server VM 25.0.3+9-LTS; Eclipse Adoptium Temurin-25.0.3+9) on Linux 7.0.0-28-generic (amd64)",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "ServerMain",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Loading Paper 26.2-65-main@fc9375a (2026-07-22T08:55:19Z) for Minecraft 26.2",
+    "origin": "server",
+    "raw": "[22:33:53] [ServerMain/INFO]: Loading Paper 26.2-65-main@fc9375a (2026-07-22T08:55:19Z) for Minecraft 26.2",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "ServerMain",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Initializing plugins...",
+    "origin": "server",
+    "raw": "[22:33:53] [ServerMain/INFO]: Initializing plugins...",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "ServerMain",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Initialized 0 plugins",
+    "origin": "server",
+    "raw": "[22:33:53] [ServerMain/INFO]: Initialized 0 plugins",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "ServerMain",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Initialising converters for DataConverter...",
+    "origin": "server",
+    "raw": "[22:33:59] [DataConverter MCTypeRegistry init thread/INFO]: Initialising converters for DataConverter...",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "DataConverter MCTypeRegistry init thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]",
+    "origin": "server",
+    "raw": "[22:33:59] [ServerMain/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "ServerMain",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Finished initialising converters for DataConverter in 1,038.2ms",
+    "origin": "server",
+    "raw": "[22:34:00] [DataConverter MCTypeRegistry init thread/INFO]: Finished initialising converters for DataConverter in 1,038.2ms",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "DataConverter MCTypeRegistry init thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Loaded 1585 recipes",
+    "origin": "server",
+    "raw": "[22:34:03] [ServerMain/INFO]: Loaded 1585 recipes",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "ServerMain",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Loaded 1688 advancements",
+    "origin": "server",
+    "raw": "[22:34:03] [ServerMain/INFO]: Loaded 1688 advancements",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "ServerMain",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "container_id": null,
+    "raw": "[22:34:03] [Server thread/INFO]: Starting minecraft server version 26.2",
+    "requested_by": null,
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ServerStarting",
+    "version": "26.2"
+  },
+  {
+    "level": "INFO",
+    "message": "Loading properties",
+    "origin": "server",
+    "raw": "[22:34:03] [Server thread/INFO]: Loading properties",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "This server is running Paper version 26.2-65-main@fc9375a (2026-07-22T08:55:19Z) (Implementing API version 26.2.build.65-beta)",
+    "origin": "server",
+    "raw": "[22:34:04] [Server thread/INFO]: This server is running Paper version 26.2-65-main@fc9375a (2026-07-22T08:55:19Z) (Implementing API version 26.2.build.65-beta)",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling",
+    "origin": "server",
+    "raw": "[22:34:04] [Server thread/INFO]: This server bundles the spark profiler. For more information please visit https://docs.papermc.io/paper/profiling",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Server Ping Player Sample Count: 12",
+    "origin": "server",
+    "raw": "[22:34:04] [Server thread/INFO]: Server Ping Player Sample Count: 12",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Using 4 threads for Netty based IO",
+    "origin": "server",
+    "raw": "[22:34:04] [Server thread/INFO]: Using 4 threads for Netty based IO",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Paper is using 1 worker threads, 1 I/O threads",
+    "origin": "server",
+    "raw": "[22:34:04] [Server thread/INFO]: Paper is using 1 worker threads, 1 I/O threads",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Default game type: SURVIVAL",
+    "origin": "server",
+    "raw": "[22:34:05] [Server thread/INFO]: Default game type: SURVIVAL",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Generating keypair",
+    "origin": "server",
+    "raw": "[22:34:05] [Server thread/INFO]: Generating keypair",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Starting Minecraft server on *:25565",
+    "origin": "server",
+    "raw": "[22:34:05] [Server thread/INFO]: Starting Minecraft server on *:25565",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Paper: Using libdeflate (Linux x86_64) compression from Velocity.",
+    "origin": "server",
+    "raw": "[22:34:05] [Server thread/INFO]: Paper: Using libdeflate (Linux x86_64) compression from Velocity.",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Paper: Using OpenSSL 3.x.x (Linux x86_64) cipher from Velocity.",
+    "origin": "server",
+    "raw": "[22:34:05] [Server thread/INFO]: Paper: Using OpenSSL 3.x.x (Linux x86_64) cipher from Velocity.",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Server permissions file permissions.yml is empty, ignoring it",
+    "origin": "server",
+    "raw": "[22:34:05] [Server thread/INFO]: Server permissions file permissions.yml is empty, ignoring it",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "WARN",
+    "message": "**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!",
+    "origin": "server",
+    "raw": "[22:34:05] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "WARN",
+    "message": "The server will make no attempt to authenticate usernames. Beware.",
+    "origin": "server",
+    "raw": "[22:34:05] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "WARN",
+    "message": "While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.",
+    "origin": "server",
+    "raw": "[22:34:05] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "WARN",
+    "message": "To change this, set \"online-mode\" to \"true\" in the server.properties file.",
+    "origin": "server",
+    "raw": "[22:34:05] [Server thread/WARN]: To change this, set \"online-mode\" to \"true\" in the server.properties file.",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Preparing level \"world\"",
+    "origin": "server",
+    "raw": "[22:34:05] [Server thread/INFO]: Preparing level \"world\"",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Loading 0 persistent chunks for level 'minecraft:overworld'...",
+    "origin": "server",
+    "raw": "[22:34:06] [Server thread/INFO]: Loading 0 persistent chunks for level 'minecraft:overworld'...",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Preparing spawn area: 100%",
+    "origin": "server",
+    "raw": "[22:34:06] [Server thread/INFO]: Preparing spawn area: 100%",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Prepared spawn area in 2 ms",
+    "origin": "server",
+    "raw": "[22:34:06] [Server thread/INFO]: Prepared spawn area in 2 ms",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Loading 0 persistent chunks for level 'minecraft:the_nether'...",
+    "origin": "server",
+    "raw": "[22:34:06] [Server thread/INFO]: Loading 0 persistent chunks for level 'minecraft:the_nether'...",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Prepared spawn area in 3 ms",
+    "origin": "server",
+    "raw": "[22:34:06] [Server thread/INFO]: Prepared spawn area in 3 ms",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Loading 0 persistent chunks for level 'minecraft:the_end'...",
+    "origin": "server",
+    "raw": "[22:34:06] [Server thread/INFO]: Loading 0 persistent chunks for level 'minecraft:the_end'...",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Prepared spawn area in 0 ms",
+    "origin": "server",
+    "raw": "[22:34:06] [Server thread/INFO]: Prepared spawn area in 0 ms",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Done preparing level \"world\" (0.599s)",
+    "origin": "server",
+    "raw": "[22:34:06] [Server thread/INFO]: Done preparing level \"world\" (0.599s)",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Starting background profiler...",
+    "origin": "server",
+    "raw": "[22:34:06] [Server thread/INFO]: Starting background profiler...",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Starting remote control listener",
+    "origin": "server",
+    "raw": "[22:34:06] [Server thread/INFO]: Starting remote control listener",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Thread RCON Listener started",
+    "origin": "server",
+    "raw": "[22:34:06] [Server thread/INFO]: Thread RCON Listener started",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "RCON running on 0.0.0.0:25575",
+    "origin": "server",
+    "raw": "[22:34:06] [Server thread/INFO]: RCON running on 0.0.0.0:25575",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Saving chunks for level 'ServerLevel[world]'/minecraft:overworld",
+    "origin": "server",
+    "raw": "[22:34:06] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether",
+    "origin": "server",
+    "raw": "[22:34:07] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Saving chunks for level 'ServerLevel[world]'/minecraft:the_end",
+    "origin": "server",
+    "raw": "[22:34:07] [Server thread/INFO]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "ThreadedAnvilChunkStorage (world): All chunks are saved",
+    "origin": "server",
+    "raw": "[22:34:07] [Server thread/INFO]: ThreadedAnvilChunkStorage (world): All chunks are saved",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "ThreadedAnvilChunkStorage (DIM-1): All chunks are saved",
+    "origin": "server",
+    "raw": "[22:34:07] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "ThreadedAnvilChunkStorage (DIM1): All chunks are saved",
+    "origin": "server",
+    "raw": "[22:34:07] [Server thread/INFO]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "ThreadedAnvilChunkStorage: All dimensions are saved",
+    "origin": "server",
+    "raw": "[22:34:07] [Server thread/INFO]: ThreadedAnvilChunkStorage: All dimensions are saved",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Running delayed init tasks",
+    "origin": "server",
+    "raw": "[22:34:07] [Server thread/INFO]: Running delayed init tasks",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "detected_by": "log",
+    "raw": "[22:34:07] [Server thread/INFO]: Done (15.238s)! For help, type \"help\"",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "startup_seconds": 15.238,
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ServerReady",
+    "version": null
+  },
+  {
+    "level": "INFO",
+    "message": "UUID of player Hypixelite is 403d4fb2-f466-3716-b9cb-a3e769bb40c9",
+    "origin": "server",
+    "raw": "[22:34:37] [User Authenticator #0/INFO]: UUID of player Hypixelite is 403d4fb2-f466-3716-b9cb-a3e769bb40c9",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "User Authenticator #0",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "address": null,
+    "first_seen": false,
+    "online_count": 0,
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[22:34:39] [Server thread/INFO]: Hypixelite joined the game",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "PlayerJoined"
+  },
+  {
+    "level": "INFO",
+    "message": "Hypixelite[/115.99.245.156:54384] logged in with entity id 77 at ([minecraft:overworld]-508.1548827749498, 63.0, 170.24540911352605)",
+    "origin": "server",
+    "raw": "[22:34:39] [Server thread/INFO]: Hypixelite[/115.99.245.156:54384] logged in with entity id 77 at ([minecraft:overworld]-508.1548827749498, 63.0, 170.24540911352605)",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Hypixelite issued server command: /gamemode creative",
+    "origin": "server",
+    "raw": "[22:42:08] [Server thread/INFO]: Hypixelite issued server command: /gamemode creative",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "[Hypixelite: Set own game mode to Creative Mode]",
+    "origin": "server",
+    "raw": "[22:42:08] [Server thread/INFO]: [Hypixelite: Set own game mode to Creative Mode]",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Hypixelite lost connection: Disconnected",
+    "origin": "server",
+    "raw": "[23:00:32] [Server thread/INFO]: Hypixelite lost connection: Disconnected",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "online_count": 0,
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:00:32] [Server thread/INFO]: Hypixelite left the game",
+    "reason": "unknown",
+    "seq": 0,
+    "server_id": "fixture",
+    "session_seconds": null,
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "PlayerLeft"
+  },
+  {
+    "level": "INFO",
+    "message": "UUID of player Hypixelite is 403d4fb2-f466-3716-b9cb-a3e769bb40c9",
+    "origin": "server",
+    "raw": "[23:00:40] [User Authenticator #1/INFO]: UUID of player Hypixelite is 403d4fb2-f466-3716-b9cb-a3e769bb40c9",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "User Authenticator #1",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "address": null,
+    "first_seen": false,
+    "online_count": 0,
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:00:40] [Server thread/INFO]: Hypixelite joined the game",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "PlayerJoined"
+  },
+  {
+    "level": "INFO",
+    "message": "Hypixelite[/115.99.245.156:58842] logged in with entity id 3988 at ([minecraft:overworld]-498.1238864074496, 82.0, 184.54980996040808)",
+    "origin": "server",
+    "raw": "[23:00:40] [Server thread/INFO]: Hypixelite[/115.99.245.156:58842] logged in with entity id 3988 at ([minecraft:overworld]-498.1238864074496, 82.0, 184.54980996040808)",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "UUID of player bharath_720 is 62bda753-a1fe-3241-bd71-73f4b11ba081",
+    "origin": "server",
+    "raw": "[23:03:25] [User Authenticator #2/INFO]: UUID of player bharath_720 is 62bda753-a1fe-3241-bd71-73f4b11ba081",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "User Authenticator #2",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "address": null,
+    "first_seen": false,
+    "online_count": 0,
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:03:26] [Server thread/INFO]: bharath_720 joined the game",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "PlayerJoined"
+  },
+  {
+    "level": "INFO",
+    "message": "bharath_720[/103.170.226.110:60953] logged in with entity id 4299 at ([minecraft:overworld]0.5, 80.0, -2.5)",
+    "origin": "server",
+    "raw": "[23:03:26] [Server thread/INFO]: bharath_720[/103.170.226.110:60953] logged in with entity id 4299 at ([minecraft:overworld]0.5, 80.0, -2.5)",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "kind": "chat",
+    "message": "ayo",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:03:28] [Async Chat Thread - #0/INFO]: [Not Secure] <Hypixelite> ayo",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "Hi",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:04:05] [Async Chat Thread - #0/INFO]: [Not Secure] <bharath_720> Hi",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "meet mr.yagesh",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:04:10] [Async Chat Thread - #0/INFO]: [Not Secure] <bharath_720> meet mr.yagesh",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "meeted",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:04:18] [Async Chat Thread - #0/INFO]: [Not Secure] <Hypixelite> meeted",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "my base at -508 63 167",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:04:45] [Async Chat Thread - #0/INFO]: [Not Secure] <Hypixelite> my base at -508 63 167",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "you mean \"our base\"",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:05:16] [Async Chat Thread - #0/INFO]: [Not Secure] <bharath_720> you mean \"our base\"",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "level": "INFO",
+    "message": "Hypixelite issued server command: /tp Hypixelite bharath_720",
+    "origin": "server",
+    "raw": "[23:05:29] [Server thread/INFO]: Hypixelite issued server command: /tp Hypixelite bharath_720",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "[Hypixelite: Teleported Hypixelite to bharath_720]",
+    "origin": "server",
+    "raw": "[23:05:29] [Server thread/INFO]: [Hypixelite: Teleported Hypixelite to bharath_720]",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "Hypixelite issued server command: /gamemode survival",
+    "origin": "server",
+    "raw": "[23:05:34] [Server thread/INFO]: Hypixelite issued server command: /gamemode survival",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "[Hypixelite: Set own game mode to Survival Mode]",
+    "origin": "server",
+    "raw": "[23:05:34] [Server thread/INFO]: [Hypixelite: Set own game mode to Survival Mode]",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "kind": "chat",
+    "message": "idk wherewe at",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:05:52] [Async Chat Thread - #1/INFO]: [Not Secure] <Hypixelite> idk wherewe at",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "let's go base",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:06:02] [Async Chat Thread - #1/INFO]: [Not Secure] <bharath_720> let's go base",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "you have boat?",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:06:19] [Async Chat Thread - #1/INFO]: [Not Secure] <bharath_720> you have boat?",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "steamy af",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:06:41] [Async Chat Thread - #1/INFO]: [Not Secure] <bharath_720> steamy af",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "bro I turned shaders on and ts looks majestic fr fr",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:07:10] [Async Chat Thread - #1/INFO]: [Not Secure] <bharath_720> bro I turned shaders on and ts looks majestic fr fr",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "bro i think i should add ai to minecraft",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:07:24] [Async Chat Thread - #1/INFO]: [Not Secure] <Hypixelite> bro i think i should add ai to minecraft",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "add dibyo as a final boss to minecraft",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:07:37] [Async Chat Thread - #1/INFO]: [Not Secure] <bharath_720> add dibyo as a final boss to minecraft",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "follow",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:09:18] [Async Chat Thread - #2/INFO]: [Not Secure] <Hypixelite> follow",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "advancement",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:09:47] [Server thread/INFO]: Hypixelite has made the advancement [Not Today, Thank You]",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "title": "Not Today, Thank You",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "PlayerAdvancement"
+  },
+  {
+    "kind": "chat",
+    "message": "sleep",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:12:22] [Async Chat Thread - #4/INFO]: [Not Secure] <Hypixelite> sleep",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "advancement",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:12:23] [Server thread/INFO]: bharath_720 has made the advancement [Sweet Dreams]",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "title": "Sweet Dreams",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "PlayerAdvancement"
+  },
+  {
+    "kind": "chat",
+    "message": "is this nether portal",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:12:36] [Async Chat Thread - #4/INFO]: [Not Secure] <bharath_720> is this nether portal",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "these fuckass creepers bro",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:12:59] [Async Chat Thread - #4/INFO]: [Not Secure] <bharath_720> these fuckass creepers bro",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "ye this a nether portal",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:13:44] [Async Chat Thread - #4/INFO]: [Not Secure] <Hypixelite> ye this a nether portal",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "dont go in yet tho",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:13:49] [Async Chat Thread - #4/INFO]: [Not Secure] <Hypixelite> dont go in yet tho",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "I never saw one in the game this my first time",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:14:07] [Async Chat Thread - #4/INFO]: [Not Secure] <bharath_720> I never saw one in the game this my first time",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "level": "INFO",
+    "message": "Hypixelite issued server command: /give Hypixelite minecraft:black_bed",
+    "origin": "server",
+    "raw": "[23:14:38] [Server thread/INFO]: Hypixelite issued server command: /give Hypixelite minecraft:black_bed",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "[Hypixelite: Gave 1 [Black Bed] to Hypixelite]",
+    "origin": "server",
+    "raw": "[23:14:38] [Server thread/INFO]: [Hypixelite: Gave 1 [Black Bed] to Hypixelite]",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "kind": "chat",
+    "message": "hostel bed simulation",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:14:49] [Async Chat Thread - #4/INFO]: [Not Secure] <Hypixelite> hostel bed simulation",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "can't wait for tez bhai to join",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:15:07] [Async Chat Thread - #4/INFO]: [Not Secure] <bharath_720> can't wait for tez bhai to join",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "he said he'll play after college starts",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:15:16] [Async Chat Thread - #4/INFO]: [Not Secure] <bharath_720> he said he'll play after college starts",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "he'd die before download mc",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:15:18] [Async Chat Thread - #4/INFO]: [Not Secure] <Hypixelite> he'd die before download mc",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "oh",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:15:20] [Async Chat Thread - #4/INFO]: [Not Secure] <Hypixelite> oh",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "wow",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:15:22] [Async Chat Thread - #4/INFO]: [Not Secure] <Hypixelite> wow",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "u got food?",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:16:06] [Async Chat Thread - #4/INFO]: [Not Secure] <Hypixelite> u got food?",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "off to majdur work",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:16:37] [Async Chat Thread - #4/INFO]: [Not Secure] <Hypixelite> off to majdur work",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "level": "INFO",
+    "message": "Hypixelite issued server command: /give Hypixelite minecraft:cobblestone 128",
+    "origin": "server",
+    "raw": "[23:17:53] [Server thread/INFO]: Hypixelite issued server command: /give Hypixelite minecraft:cobblestone 128",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "level": "INFO",
+    "message": "[Hypixelite: Gave 128 [Cobblestone] to Hypixelite]",
+    "origin": "server",
+    "raw": "[23:17:53] [Server thread/INFO]: [Hypixelite: Gave 128 [Cobblestone] to Hypixelite]",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "kind": "advancement",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:18:59] [Server thread/INFO]: bharath_720 has made the advancement [Stone Age]",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "title": "Stone Age",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "PlayerAdvancement"
+  },
+  {
+    "kind": "chat",
+    "message": "time to sleep mr.yagesh",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:22:47] [Async Chat Thread - #6/INFO]: [Not Secure] <Hypixelite> time to sleep mr.yagesh",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "get up",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:23:01] [Async Chat Thread - #6/INFO]: [Not Secure] <Hypixelite> get up",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "left side",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:23:05] [Async Chat Thread - #6/INFO]: [Not Secure] <Hypixelite> left side",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "wrong thats tez",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:23:10] [Async Chat Thread - #6/INFO]: [Not Secure] <Hypixelite> wrong thats tez",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "yes",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:23:18] [Async Chat Thread - #6/INFO]: [Not Secure] <Hypixelite> yes",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "this nether portal noisy af",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:23:33] [Async Chat Thread - #6/INFO]: [Not Secure] <bharath_720> this nether portal noisy af",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "need an explosion to break it",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:24:00] [Async Chat Thread - #6/INFO]: [Not Secure] <Hypixelite> need an explosion to break it",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "it's okay we make base a bit far",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:24:11] [Async Chat Thread - #6/INFO]: [Not Secure] <bharath_720> it's okay we make base a bit far",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "lure a creeper",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:24:13] [Async Chat Thread - #6/INFO]: [Not Secure] <Hypixelite> lure a creeper",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "sure",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:24:16] [Async Chat Thread - #6/INFO]: [Not Secure] <Hypixelite> sure",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "like a wooden base",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:24:17] [Async Chat Thread - #6/INFO]: [Not Secure] <bharath_720> like a wooden base",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "wanna go caves tmrw",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:24:32] [Async Chat Thread - #6/INFO]: [Not Secure] <Hypixelite> wanna go caves tmrw",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "sure",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:24:38] [Async Chat Thread - #6/INFO]: [Not Secure] <bharath_720> sure",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "btw this thingy on top is a farm",
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:24:43] [Async Chat Thread - #6/INFO]: [Not Secure] <Hypixelite> btw this thingy on top is a farm",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "kind": "chat",
+    "message": "yeah I got to know looking at it, for mobs?",
+    "player": {
+      "name": "bharath_720",
+      "uuid": null
+    },
+    "raw": "[23:25:11] [Async Chat Thread - #6/INFO]: [Not Secure] <bharath_720> yeah I got to know looking at it, for mobs?",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ChatMessage"
+  },
+  {
+    "level": "INFO",
+    "message": "Hypixelite lost connection: Disconnected",
+    "origin": "server",
+    "raw": "[23:26:52] [Server thread/INFO]: Hypixelite lost connection: Disconnected",
+    "seq": 0,
+    "server_id": "fixture",
+    "source": "log",
+    "stream": "stdout",
+    "thread": "Server thread",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "ConsoleLog"
+  },
+  {
+    "online_count": 0,
+    "player": {
+      "name": "Hypixelite",
+      "uuid": null
+    },
+    "raw": "[23:26:53] [Server thread/INFO]: Hypixelite left the game",
+    "reason": "unknown",
+    "seq": 0,
+    "server_id": "fixture",
+    "session_seconds": null,
+    "source": "log",
+    "ts": "2026-01-01T00:00:00+00:00",
+    "type": "PlayerLeft"
+  }
+]

@@ -1,0 +1,5 @@
+# Real log archives land here via scripts/pull-log-fixtures.sh.
+# 36 files, 164K total: the highest-value test assets in the project, and cheap to commit.
+# Note that a `docker logs --timestamps` capture is needed as well as the .log.gz archives -
+# only that contains the mc-server-runner and [init] wrapper lines, which are one of the three
+# interleaved grammars the parser has to handle.
